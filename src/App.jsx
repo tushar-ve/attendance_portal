@@ -2,6 +2,7 @@ import './App.css'
 
 import Login from './auth/Login';
 import Register from './auth/Register';
+import WebCam from './webcam/Webcam';
 import Counter from './features/counter/Counter';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -14,6 +15,7 @@ function App() {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/webcam" element={<WebCam />} />
         </Routes>
       </BrowserRouter>
       {/* <Counter /> */}

@@ -135,6 +135,15 @@ function Register() {
             </button>
 
             <button
+              className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8 rounded-lg
+                                  hover:bg-[#fff] hover:border-2
+                                  hover:transition ease-in-out"
+              onClick={() => navigate("/login")}
+            >
+              Sign Up
+            </button>
+
+            <button
               type="submit"
               className="bg-[#41A7C8] mt-5 ml-32 mb-5 w-28 h-8 rounded-lg
                                   hover:bg-[#fff] hover:border-2
