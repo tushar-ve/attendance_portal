@@ -1,8 +1,15 @@
+
 import React, { useState } from "react";
+
 
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+
+  const navigate = useNavigate();
+
+ 
+
   const [error, setError] = useState("");
   const [details, setDetails] = useState({
     username: "",
@@ -12,7 +19,6 @@ function Register() {
     designation: "",
   });
 
-  const navigate = useNavigate();
 
   function handleChange(e) {
     setDetails({ ...details, [e.target.name]: e.target.value });
@@ -40,6 +46,7 @@ function Register() {
     localStorage.setItem("registerDetails", JSON.stringify(updatedDetails));
     navigate("/login");
     console.log("Form submitted successfully");
+
   }
 
   return (
@@ -120,6 +127,16 @@ function Register() {
                                 focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
               type="text"
               placeholder="Enter Designation"
+            />
+          </form>
+          <button
+            className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8 rounded-lg
+                                  hover:bg-[#fff] hover:border-2
+                                  hover:transition ease-in-out"
+            onClick={() => navigate("/login")}
+          >
+            Sign Up
+          </button>
               value={details.designation}
               onChange={handleChange}
               name="designation"
