@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [error, setError] = useState("");
   const [details, setDetails] = useState({
     username: "",
@@ -11,8 +13,6 @@ function Register() {
     confPassword: "",
     designation: "",
   });
-
-  const navigate = useNavigate();
 
   function handleChange(e) {
     setDetails({ ...details, [e.target.name]: e.target.value });
@@ -124,6 +124,16 @@ function Register() {
               onChange={handleChange}
               name="designation"
             />
+
+            <button
+              className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8 rounded-lg
+                                  hover:bg-[#fff] hover:border-2
+                                  hover:transition ease-in-out"
+              onClick={() => navigate("/login")}
+            >
+              Sign Up
+            </button>
+
             <button
               type="submit"
               className="bg-[#41A7C8] mt-5 ml-32 mb-5 w-28 h-8 rounded-lg
