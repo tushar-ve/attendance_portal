@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { loginUser } from "../features/authentication/authSlice";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { authTokens, isLoading, error } = useSelector((store) => store.auth);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleLoginSubmit(e) {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  }
 
   return (
     <>
       <div className="flex">
         <span>
-          <img src="/register_logo.png" />
+          <img src="src\images\register_logo.png" alt="RegisterLogo" />
         </span>
         <hr className="flex-grow border-t mt-16 mr-16 border-[#41A7C8]" />
       </div>
@@ -23,7 +36,7 @@ function Login() {
           <div className="flex flex-col  border-0 mb-5 w-full">
             <img
               className="w-1/4 border-none"
-              src="/register_logo.png"
+              src="src\images\register_logo.png"
               alt="RegisterLogo"
             />
           </div>
@@ -33,32 +46,41 @@ function Login() {
             </h2>
             <p>Beyond this wall lies your potential. Open it.</p>
           </div>
-          <div className="flex flex-col relative w-full p-6">
-            <label>Employee ID</label>
-            <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none  focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-              type="text"
-              placeholder="Enter ID"
-            />
+          <form onSubmit={handleLoginSubmit}>
+            <div className="flex flex-col relative w-full p-6">
+              <label>Email</label>
+              <input
+                className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none  focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
+                type="text"
+                placeholder="Enter Email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            <label>Password</label>
-            <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
+              <label>Password</label>
+              <input
+                className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
                                 focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-              type="text"
-              placeholder="Enter Password"
-            />
-          </div>
-          <div className="text-center">
-            <button
-              className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8  rounded-lg
+                type="text"
+                placeholder="Enter Password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="text-center">
+              <button
+                type="submit"
+                className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8  rounded-lg
                                   hover:bg-[#fff] hover:border-2
                                   hover:transition ease-in-out"
-              onClick={() => navigate("/webcam")}
-            >
-              LOGIN
-            </button>
-          </div>
+              >
+                LOGIN
+              </button>
+            </div>
+          </form>
+          {error && <p className="text-[#8b0000]">{error}</p>}
         </div>
         <div className="flex-col items-center justify-between h-full">
           <div className="w-80 flex-col items-center">
@@ -71,7 +93,7 @@ function Login() {
             </p>
           </div>
           <div className="mt-20">
-            <img src="/login.png" alt="" className="h-1/4" />
+            <img src="src\images\login.png" alt="" className="h-1/4" />
           </div>
         </div>
       </div>

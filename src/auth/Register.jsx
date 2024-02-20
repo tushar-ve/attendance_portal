@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const registerUrl = "http://65.0.87.100/api/register/";
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -14,11 +15,11 @@ function Register() {
     designation: "",
   });
 
-  function handleChange(e) {
+  function handleRegisterChange(e) {
     setDetails({ ...details, [e.target.name]: e.target.value });
   }
 
-  function handleFormSubmit(e) {
+  function handleRegisterSubmit(e) {
     e.preventDefault();
     if (
       details.username === "" ||
@@ -27,24 +28,48 @@ function Register() {
       details.confPassword === "" ||
       details.designation === ""
     ) {
-      setError("Any field cannot be empty");
+      setError("Input field cannot be empty");
       return;
     }
     if (details.password !== details.confPassword) {
       setError("Both passwords must match!");
       return;
     }
-    const existingDetails =
-      JSON.parse(localStorage.getItem("registerDetails")) || [];
-    const updatedDetails = [...existingDetails, details];
-    localStorage.setItem("registerDetails", JSON.stringify(updatedDetails));
-    navigate("/login");
-    console.log("Form submitted successfully");
+    const sendData = {
+      name: details.username,
+      email: details.email,
+      password: details.password,
+      designation: details.designation,
+    };
+    fetch(registerUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sendData),
+    })
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Something went wrong!!!");
+        }
+        return response.json();
+      })
+      .then((responseData) => {
+        console.log(responseData);
+        navigate("/login");
+      })
+      .catch((error) => setError(error.message));
+    // const existingDetails =
+    //   JSON.parse(localStorage.getItem("registerDetails")) || [];
+    // const updatedDetails = [...existingDetails, details];
+    // localStorage.setItem("registerDetails", JSON.stringify(updatedDetails));
+    // navigate("/login");
   }
 
   return (
     <div className="p-10">
-      <img src="/register_logo.png" alt="RegisterLogo" />
+      <img src="src\images\register_logo.png" alt="RegisterLogo" />
       <div
         className="bg-[#41A7C8] w-full h-auto p-2 mt-2
             flex items-center justify-around"
@@ -52,7 +77,7 @@ function Register() {
         <div className="relative p-4  item-center w-1/2 ml-20">
           <img
             className="w-3/2 h-auto object-cover"
-            src="/register.png"
+            src="src\images\register.png"
             alt="Attendance"
           />
         </div>
@@ -68,11 +93,11 @@ function Register() {
               Employee Registration Form
             </h1>
             <div>Please Enter Valid Details</div>
-            <img src="/register_logo.png" alt="RegisterLogo" />
+            <img src="src\images\register_logo.png" alt="RegisterLogo" />
           </div>
           <form
             className="flex flex-col relative w-full p-5"
-            onSubmit={handleFormSubmit}
+            onSubmit={handleRegisterSubmit}
           >
             <label>Username</label>
             <input
@@ -81,7 +106,7 @@ function Register() {
               type="text"
               placeholder="Enter Username"
               value={details.username}
-              onChange={handleChange}
+              onChange={handleRegisterChange}
               name="username"
             />
             <label>Email</label>
@@ -91,7 +116,7 @@ function Register() {
               type="text"
               placeholder="Enter Email"
               value={details.email}
-              onChange={handleChange}
+              onChange={handleRegisterChange}
               name="email"
             />
             <label>Password</label>
@@ -101,7 +126,7 @@ function Register() {
               type="text"
               placeholder="Enter Password"
               value={details.password}
-              onChange={handleChange}
+              onChange={handleRegisterChange}
               name="password"
             />
             <label>Confirm Password</label>
@@ -111,7 +136,7 @@ function Register() {
               type="text"
               placeholder="Enter Confirm Password"
               value={details.confPassword}
-              onChange={handleChange}
+              onChange={handleRegisterChange}
               name="confPassword"
             />
             <label>Designation</label>
@@ -121,27 +146,9 @@ function Register() {
               type="text"
               placeholder="Enter Designation"
               value={details.designation}
-              onChange={handleChange}
+              onChange={handleRegisterChange}
               name="designation"
             />
-
-            <button
-              className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8 rounded-lg
-                                  hover:bg-[#fff] hover:border-2
-                                  hover:transition ease-in-out"
-              onClick={() => navigate("/login")}
-            >
-              Sign Up
-            </button>
-
-            <button
-              className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8 rounded-lg
-                                  hover:bg-[#fff] hover:border-2
-                                  hover:transition ease-in-out"
-              onClick={() => navigate("/login")}
-            >
-              Sign Up
-            </button>
 
             <button
               type="submit"
