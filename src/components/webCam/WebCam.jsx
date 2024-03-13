@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 function WebCam() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [scanResult, setScanResult] = useState(null);
   const [scanning, setScanning] = useState(true);
 
-  function success(result) {
-    console.log("Hello");
-  }
-
-  function error(error) {
-    console.error(error);
-  }
-
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
+    if (!scanning) {
+      // Stop scanning
+      return;
+    }
+
+    const scanner = new Html5QrcodeScanner('reader', {
       qrbox: {
         width: 250,
         height: 250,
@@ -23,30 +20,52 @@ function WebCam() {
       fps: 5,
     });
 
-    setScanResult(scanner);
-
-    scanner.render(success, error);
+    scanner.render(onScanSuccess, onScanError);
 
     return () => {
       scanner.clear();
     };
+  }, [scanning]);
+
+  const onScanSuccess = (result) => {
+    setScanResult(result);
+    setScanning(false);
+    fetch('http://127.0.0.1:8000/api/scan/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ qrCode: result }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to verify QR code');
+        }
+        return response.json();
+      })
+      .then(data => {
+
+        console.log(data);
+
+      })
+      .catch(error => {
+        console.error('Error verifying QR code:', error);
+      });
+  };
+
+  const onScanError = (error) => {
+    console.error('QR code scan error:', error);
+  };
+
+  useEffect(() => {
+
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+
+    return () => clearInterval(intervalId);
   }, []);
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setCurrentTime(new Date());
-  //   }, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
-  if (scanResult) {
-    return (
-      <>
-        <div>Hello</div>
-      </>
-    );
-  }
-
   return (
     <>
       <div className="flex flex-col min-h-screen p-6">
@@ -72,28 +91,23 @@ function WebCam() {
             <div className="relative">
               <div className="w-[400px] h-[400px] bg-[#41A7C8] rounded-lg flex flex-col items-center justify-center">
                 <div className="bg-[#000000] w-60 h-60 rounded-full overflow-hidden">
-                  {scanResult ? (
-                    <div className="absolute inset-x-0 bottom-0 bg-white p-2">
-                      Success: <a>{scanResult}</a>
-                    </div>
-                  ) : scanning ? (
+
+                  {scanning ? (
                     <div id="reader"></div>
                   ) : null}
                 </div>
-                <button className="mt-6 rounded-lg w-28 bg-[#0B8900] text-[#ffffff] font-bold">
-                  Mark
-                </button>
-                {scanResult}
-                <p className="mt-2 text-[#E50000]">
-                  Please follow the given Instruction
-                </p>
+                <button className="mt-6 rounded-lg w-28 bg-[#0B8900] text-[#ffffff] font-bold">Mark</button>
+                {scanResult ? (
+                  <div className="absolute inset-x-0 bottom-0 bg-white p-2">
+                    Success: <a>{scanResult}</a>
+                  </div>
+                ) : null}
+                <p className="mt-2 text-[#E50000]">Please follow the given Instruction</p>
               </div>
             </div>
             <div className="w-[650px] h-[631px] bg-[#ffffff] rounded-lg">
               <div className="p-1">
-                <h2 className="font-bold underline">
-                  Barcode Scanning Instructions
-                </h2>
+                <h2 className="font-bold underline">Barcode Scanning Instructions</h2>
                 <div className="mt-2">
                   <ol className="list-decimal list-inside font-medium">
                     <li>

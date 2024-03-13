@@ -2,7 +2,7 @@ import "./App.css";
 
 import Login from "./auth/Login";
 import Register from "./auth/Register";
-import WebCam from "./components/webCam/Webcam";
+import WebCam from "./components/webCam/WebCam";
 import Dashboard from "./components/dashboard/Dashboard";
 import Counter from "./features/counter/Counter";
 
