@@ -1,30 +1,53 @@
 import React, { useState, useEffect } from "react";
-import Webcam from "react-webcam";
-import { useRef } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 function WebCam() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [scanResult, setScanResult] = useState(null);
+  const [scanning, setScanning] = useState(true);
+
+  function success(result) {
+    console.log("Hello");
+  }
+
+  function error(error) {
+    console.error(error);
+  }
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(intervalId);
+    const scanner = new Html5QrcodeScanner("reader", {
+      qrbox: {
+        width: 250,
+        height: 250,
+      },
+      fps: 5,
+    });
+
+    setScanResult(scanner);
+
+    scanner.render(success, error);
+
+    return () => {
+      scanner.clear();
+    };
   }, []);
-  // const webRef = useRef(null);
-  // const [img, setImg] = useState("");
-  // function showImage () {
-  //     let getImg = webRef.current.getScreenshot();
-  //     setImg(getImg);
-  // };
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setCurrentTime(new Date());
+  //   }, 1000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  if (scanResult) {
+    return (
+      <>
+        <div>Hello</div>
+      </>
+    );
+  }
 
   return (
-    // <div>
-    //   Webcam
-    //   <Webcam ref={webRef} />
-    //   <button onClick={showImage}>Show Image in Console</button>
-    //   {img && <img src={img} alt="Image" />}
-    // </div>
     <>
       <div className="flex flex-col min-h-screen p-6">
         <div className="flex">
@@ -33,10 +56,7 @@ function WebCam() {
           </span>
           <hr className="flex-grow border-t mt-16 mr-16 border-[#41A7C8]" />
         </div>
-        <div
-          className="flex flex-col items-center w-full h-auto 
-                      bg-sky-100 mt-6"
-        >
+        <div className="flex flex-col items-center w-full h-auto bg-sky-100 mt-6">
           <h4 className="font-bold mt-2">Mark Your Attendance</h4>
           <div className="flex flex-row justify-between w-full">
             <p className="ml-14">
@@ -48,28 +68,26 @@ function WebCam() {
               {currentTime.toLocaleDateString()}
             </p>
           </div>
-          <div
-            className="flex items-center justify-around mt-8
-                           w-full p-4"
-          >
-            <div
-              className="w-[400px] h-[400px] bg-[#41A7C8] rounded-lg
-                             flex flex-col items-center justify-center"
-            >
-              <div className="bg-[#000000] w-60 h-60 rounded-full overflow-hidden">
-                <Webcam
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+          <div className="flex items-center justify-around mt-8 w-full p-4">
+            <div className="relative">
+              <div className="w-[400px] h-[400px] bg-[#41A7C8] rounded-lg flex flex-col items-center justify-center">
+                <div className="bg-[#000000] w-60 h-60 rounded-full overflow-hidden">
+                  {scanResult ? (
+                    <div className="absolute inset-x-0 bottom-0 bg-white p-2">
+                      Success: <a>{scanResult}</a>
+                    </div>
+                  ) : scanning ? (
+                    <div id="reader"></div>
+                  ) : null}
+                </div>
+                <button className="mt-6 rounded-lg w-28 bg-[#0B8900] text-[#ffffff] font-bold">
+                  Mark
+                </button>
+                {scanResult}
+                <p className="mt-2 text-[#E50000]">
+                  Please follow the given Instruction
+                </p>
               </div>
-              <button
-                className="mt-6 rounded-lg w-28 bg-[#0B8900]
-                                 text-[#ffffff] font-bold"
-              >
-                Mark
-              </button>
-              <p className="mt-2 text-[#E50000]">
-                Please follow the given Instruction
-              </p>
             </div>
             <div className="w-[650px] h-[631px] bg-[#ffffff] rounded-lg">
               <div className="p-1">
