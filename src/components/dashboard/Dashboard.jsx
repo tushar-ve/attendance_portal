@@ -1,8 +1,5 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import React, { useState } from "react";
+import Calendar from "../calendar/Calendar";
 
 function Dashboard() {
   return (
@@ -58,7 +55,7 @@ function Dashboard() {
         </section>
         <section
           className="flex flex-row items-start flex-1 overflow-hidden
-                            p-8 gap-40"
+                            p-10 gap-40"
         >
           <div className="w-6/12 h-full">
             <div className="grid grid-cols-3 gap-1">
@@ -78,97 +75,7 @@ function Dashboard() {
               </div>
             </div>
             <hr />
-            <table className="table-fixed">
-              <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView={"dayGridMonth"}
-                height={800}
-              />
-              {/* <thead>
-                <tr>
-                  <th>Sunday</th>
-                  <th>Monday</th>
-                  <th>Tuesday</th>
-                  <th>Wednesday</th>
-                  <th>Thursday</th>
-                  <th>Friday</th>
-                  <th>Saturday</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td>Jan 1</td>
-                  <td>Jan 2</td>
-                  <td>Jan 3</td>
-                  <td>Jan 4</td>
-                  <td>Jan 5</td>
-                  <td>Jan 6</td>
-                </tr>
-                <tr>
-                  <td>Jan 7</td>
-                  <td>Jan 8</td>
-                  <td>Jan 9</td>
-                  <td>Jan 10</td>
-                  <td>Jan 11</td>
-                  <td>Jan 12</td>
-                  <td>Jan 13</td>
-                </tr>
-                <tr>
-                  <td>Jan 14</td>
-                  <td>Jan 15</td>
-                  <td>Jan 16</td>
-                  <td>Jan 17</td>
-                  <td>Jan 18</td>
-                  <td>Jan 19</td>
-                  <td>Jan 20</td>
-                </tr>
-                <tr>
-                  <td>Jan 21</td>
-                  <td>Jan 22</td>
-                  <td>Jan 23</td>
-                  <td>Jan 24</td>
-                  <td>Jan 25</td>
-                  <td>Jan 26</td>
-                  <td>Jan 27</td>
-                </tr>
-                <tr>
-                  <td>Jan 28</td>
-                  <td>Jan 29</td>
-                  <td>Jan 30</td>
-                  <td>Jan 31</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody> */}
-            </table>
-          </div>
-          <div>
-            <div>
-              <h3>Upcoming Holidays</h3>
-              <hr />
-              <h4>Maha Shivratri</h4>
-              <p>Date : 08-Mar RH | Friday</p>
-              <hr />
-              <h4>Holi</h4>
-              <p>Date : 28-Mar H | Friday</p>
-              <hr />
-              <h4>Good Friday</h4>
-              <p>Date : 28-Apr RH | Friday</p>
-            </div>
-            <div>
-              <h2>Attendance Evaluation</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Parameters</th>
-                    <th>Total Days</th>
-                    <th>Balance</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
+            <Calendar />
           </div>
         </section>
       </div>
