@@ -31,7 +31,7 @@ const generateDates = () => {
 function Calendar() {
   const dates = generateDates();
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg mt-2">
+    <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-300">
       <CalendarNavbar />
       <Weeks />
       <DatesMatrix dates={dates} />

@@ -1,0 +1,16 @@
+.dashboard__info {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .dashboard__info {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dashboard__info h4 {
+  border-bottom: 1px solid white;
+  margin-bottom: 7px; /* Adjust this value as needed */
+  width: 80%; /* Adjust the width as needed */
+}

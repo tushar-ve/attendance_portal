@@ -48,13 +48,13 @@ function DatesMatrix({ dates }) {
 
   console.log(dates);
   return (
-    <div className="mb-6 mt-4">
+    <div className="mt-2">
       {dates.map((date, index) => (
-        <div key={index} className="flex justify-between h-24">
+        <div key={index} className="flex justify-between h-20">
           {date.map((day, dayIndex) => (
             <div
               key={`${index}-${dayIndex}`} // Combine index for unique key
-              className={`aspect-square text-top text-right cursor-pointer p-1 mb-4 ${
+              className={`aspect-square text-top text-right cursor-pointer p-2 mb-4 ${
                 day
                   ? dayIndex % 2 === 0
                     ? "bg-[#a9afac7a]"

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const loginUrl = "http://65.0.87.100/api/login/";
+const loginUrl = "http://127.0.0.1:8000/api/login/";
 
 const initialState = {
   authTokens: localStorage.getItem("tokens")
@@ -47,7 +47,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        const access = action.payload.token.access;
+        const access = action.payload.tokens.access;
         state.authTokens = access;
         localStorage.setItem("tokens", JSON.stringify(access));
         state.isLoading = false;

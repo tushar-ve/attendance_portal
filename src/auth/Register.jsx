@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
+import './Register.css'
+import RegisterLogo from '../images/download.svg';
 function Register() {
-  const registerUrl = "http://65.0.87.100/api/register/";
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -12,7 +11,7 @@ function Register() {
     email: "",
     password: "",
     confPassword: "",
-    designation: "",
+    role: "",
   });
 
   function handleRegisterChange(e) {
@@ -26,7 +25,7 @@ function Register() {
       details.email === "" ||
       details.password === "" ||
       details.confPassword === "" ||
-      details.designation === ""
+      details.role === ""
     ) {
       setError("Input field cannot be empty");
       return;
@@ -39,9 +38,9 @@ function Register() {
       name: details.username,
       email: details.email,
       password: details.password,
-      designation: details.designation,
+      role: details.role,
     };
-    fetch(registerUrl, {
+    fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,110 +59,97 @@ function Register() {
         navigate("/login");
       })
       .catch((error) => setError(error.message));
-    // const existingDetails =
-    //   JSON.parse(localStorage.getItem("registerDetails")) || [];
-    // const updatedDetails = [...existingDetails, details];
-    // localStorage.setItem("registerDetails", JSON.stringify(updatedDetails));
-    // navigate("/login");
   }
 
   return (
-    <div className="p-10">
-      <img src="src\images\register_logo.png" alt="RegisterLogo" />
-      <div
-        className="bg-[#41A7C8] w-full h-auto p-2 mt-2
-            flex items-center justify-around"
-      >
-        <div className="relative p-4  item-center w-1/2 ml-20">
-          <img
-            className="w-3/2 h-auto object-cover"
-            src="src\images\register.png"
-            alt="Attendance"
-          />
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-400 to-blue-600">
+      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
+        <div className="text-center mb-6">
+          <img src={RegisterLogo} alt="Register Logo" className="w-20 mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold text-gray-800">Employee Registration</h2>
+          <p className="text-gray-600 mt-2">Please enter your details to register</p>
         </div>
-        <div
-          className="relative bg-white p-1 w-3/12 h-auto flex flex-col items-center 
-                justify-center rounded"
-        >
-          <div
-            className="flex flex-col items-center justify-center 
-                    mb-5 w-full"
-          >
-            <h1 style={{ color: "#044B62" }} className="underline">
-              Employee Registration Form
-            </h1>
-            <div>Please Enter Valid Details</div>
-            <img src="src\images\register_logo.png" alt="RegisterLogo" />
-          </div>
-          <form
-            className="flex flex-col relative w-full p-5"
-            onSubmit={handleRegisterSubmit}
-          >
-            <label>Username</label>
+        <form onSubmit={handleRegisterSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
+              id="username"
               type="text"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
               placeholder="Enter Username"
               value={details.username}
               onChange={handleRegisterChange}
               name="username"
+              required
             />
-            <label>Email</label>
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-              type="text"
+              id="email"
+              type="email"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
               placeholder="Enter Email"
               value={details.email}
               onChange={handleRegisterChange}
               name="email"
+              required
             />
-            <label>Password</label>
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-              type="text"
+              id="password"
+              type="password"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
               placeholder="Enter Password"
               value={details.password}
               onChange={handleRegisterChange}
               name="password"
+              required
             />
-            <label>Confirm Password</label>
+          </div>
+          <div>
+            <label htmlFor="confPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
-              className="border-2 bg-[#41A7C8] rounded text-center align-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-              type="text"
-              placeholder="Enter Confirm Password"
+              id="confPassword"
+              type="password"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+              placeholder="Confirm Password"
               value={details.confPassword}
               onChange={handleRegisterChange}
               name="confPassword"
+              required
             />
-            <label>Designation</label>
+          </div>
+          <div>
+            <label htmlFor="designation" className="block text-sm font-medium text-gray-700">Designation</label>
             <input
-              className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
+              id="designation"
               type="text"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
               placeholder="Enter Designation"
-              value={details.designation}
+              value={details.role}
               onChange={handleRegisterChange}
-              name="designation"
+              name="role"
+              required
             />
-
-            <button
-              type="submit"
-              className="bg-[#41A7C8] mt-5 ml-32 mb-5 w-28 h-8 rounded-lg
-                                  hover:bg-[#fff] hover:border-2
-                                  hover:transition ease-in-out"
-            >
-              Sign Up
-            </button>
-          </form>
-          {error && <p className="text-[#8b0000]">{error}</p>}
-        </div>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          >
+            Sign Up
+          </button>
+          <p className="forgot-password text-right">
+            Already registered <a href="/login">sign in?</a>
+          </p>
+        </form>
+        {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
       </div>
     </div>
   );
 }
 
 export default Register;
+

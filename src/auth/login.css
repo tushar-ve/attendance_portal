@@ -1,0 +1,8 @@
+.border-gradient-to-br {
+    border-image: linear-gradient(to bottom right, #4299e1, #3182ce);
+    border-image-slice: 1;
+}
+
+.text-color-blue {
+    color: #218be2; 
+}

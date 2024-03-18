@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from 'html5-qrcode';
 
+// Constants
+const API_URL = 'http://127.0.0.1:8000/api/scan/';
+const SCAN_DELAY = 5000;
+
+// Function to configure the scanner
+const configureScanner = () => ({
+  qrbox: {
+    width: 250,
+    height: 250,
+  },
+  fps: 10,
+});
+
+
 function WebCam() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [scanResult, setScanResult] = useState(null);
   const [scanning, setScanning] = useState(true);
 
   useEffect(() => {
+    const scannerConfig = configureScanner();
+
     if (!scanning) {
-      // Stop scanning
       return;
     }
 
-    const scanner = new Html5QrcodeScanner('reader', {
-      qrbox: {
-        width: 250,
-        height: 250,
-      },
-      fps: 5,
-    });
-
+    const scanner = new Html5QrcodeScanner('reader', scannerConfig);
     scanner.render(onScanSuccess, onScanError);
 
     return () => {
@@ -27,10 +35,32 @@ function WebCam() {
     };
   }, [scanning]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setScanning(true);
+    }, SCAN_DELAY);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   const onScanSuccess = (result) => {
+    if (!result) {
+      console.warn('QR code scan result is empty or invalid.');
+      return;
+    }
+
     setScanResult(result);
     setScanning(false);
-    fetch('http://127.0.0.1:8000/api/scan/', {
+
+    fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,28 +74,24 @@ function WebCam() {
         return response.json();
       })
       .then(data => {
-
         console.log(data);
-
       })
       .catch(error => {
         console.error('Error verifying QR code:', error);
+      })
+      .finally(() => {
+        // Stop scanning after successful scan
+        setScanning(false);
+        const scanner = document.getElementById('reader');
+        scanner.innerHTML = ''; // Clear the scanner container
       });
   };
 
   const onScanError = (error) => {
     console.error('QR code scan error:', error);
+    console.log('Raw scanner data:', error.detail);
   };
 
-  useEffect(() => {
-
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-
-    return () => clearInterval(intervalId);
-  }, []);
   return (
     <>
       <div className="flex flex-col min-h-screen p-6">

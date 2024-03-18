@@ -1,68 +1,55 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { loginUser } from "../features/authentication/authSlice";
 import { useNavigate } from "react-router-dom";
+import MainLogo from '../images/download.svg';
+import LoginImage from '../images/login.png';
+import './login.css'
 
 function Login() {
   const dispatch = useDispatch();
-
-  const { authTokens, isLoading, error } = useSelector((store) => store.auth);
+  const { error } = useSelector((store) => store.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   function handleLoginSubmit(e) {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    dispatch(loginUser({ email, password })).then((result) => {
+      if (result.payload && result.payload.tokens) {
+        // Redirect user to the webcam page upon successful login
+        localStorage.setItem('username', result.payload.tokens.username);
+        navigate("/dashboard");
+      }
+    });
   }
 
   return (
-    <>
-      <div className="flex">
-        <span>
-          <img src="src\images\register_logo.png" alt="RegisterLogo" />
-        </span>
-        <hr className="flex-grow border-t mt-16 mr-16 border-[#41A7C8]" />
-      </div>
-
-      <div className="flex justify-around mt-10">
-        <div
-          className="relative border-2 box-border border-[#41A7C8] bg-white p-1 
-                 w-3/12 h-[32rem] flex flex-col justify-center rounded ml-20 
-                 mt-10"
-        >
-          <div className="flex flex-col  border-0 mb-5 w-full">
-            <img
-              className="w-1/4 border-none"
-              src="src\images\register_logo.png"
-              alt="RegisterLogo"
-            />
+    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+      <div className="flex flex-col md:flex-row items-stretch md:shadow-lg md:w-4/6">
+        <div className="flex-1 bg-white p-8 md:p-12">
+          <div className="flex justify-center mb-8">
+            <img src={MainLogo} alt="RegisterLogo" className="w-32" />
           </div>
-          <div className="text-center">
-            <h2 className="underline text-[#41A7C8] font-bold	tracking-wider font-poppins">
-              LOGIN
-            </h2>
-            <p>Beyond this wall lies your potential. Open it.</p>
-          </div>
+          <h2 className="text-center text-xl font-semibold text-gray-800 mb-2">LOGIN</h2>
+          <p className="text-center text-sm text-gray-600 mb-6">Beyond this wall lies your potential. Open it.</p>
           <form onSubmit={handleLoginSubmit}>
-            <div className="flex flex-col relative w-full p-6">
-              <label>Email</label>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
               <input
-                className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none  focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
                 placeholder="Enter Email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-
-              <label>Password</label>
+            </div>
+            <div className="mb-6">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <input
-                className="border-2 bg-[#41A7C8] rounded text-center focus:outline-none
-                                focus:bg-[#FFF] focus:border-[#41A7C8] placeholder-white"
-                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+                type="password"
                 placeholder="Enter Password"
                 name="password"
                 value={password}
@@ -72,32 +59,19 @@ function Login() {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-[#41A7C8] mt-5 mb-5 w-28 h-8  rounded-lg
-                                  hover:bg-[#fff] hover:border-2
-                                  hover:transition ease-in-out"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
               >
                 LOGIN
               </button>
             </div>
           </form>
-          {error && <p className="text-[#8b0000]">{error}</p>}
+          {error && <p className="text-[#8b0000] text-center mt-4">{error}</p>}
         </div>
-        <div className="flex-col items-center justify-between h-full">
-          <div className="w-80 flex-col items-center">
-            <h1 style={{ color: "#044B62" }} className="underline font-bold">
-              ATTENDANCE PORTAL
-            </h1>
-            <p className="mt-2">
-              Having an attendance portal made tracking hours so much easier. It
-              saved me time and reduced proper work stress.
-            </p>
-          </div>
-          <div className="mt-20">
-            <img src="src\images\login.png" alt="" className="h-1/4" />
-          </div>
+        <div className="hidden md:flex md:flex-1 bg-blue-500 bg-cover bg-center">
+          <img src={LoginImage} alt="" className="object-cover w-full h-full" />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
